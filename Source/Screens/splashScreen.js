@@ -7,15 +7,16 @@ export default function SplashScreen() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    setTimeout(() => {
-      Auth().onAuthStateChanged(user => {
-        const routeName = user!==null?'Home':'Login'
-        navigation.dispatch(StackActions.replace(routeName))
+    setTimeout(async () => {
+      const unSubscribe = await Auth().onAuthStateChanged(user => {
+        const routeName = user !== null ? 'Home' : 'Login';
+        unSubscribe();
+        navigation.dispatch(StackActions.replace(routeName));
       });
-    }, 3000);
+    }, 2000);
   }, []);
   return (
-    <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text style={{color: 'black'}}>splashScreen</Text>
     </View>
   );

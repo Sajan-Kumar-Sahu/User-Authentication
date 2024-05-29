@@ -29,7 +29,7 @@ export default function Home() {
           }}
           onPress={async()=>{
             await Auth().signOut();
-            navigation.dispatch(StackActions.popToTop());
+            navigation.dispatch(StackActions.replace("Login"));
           }}
           >
           <Text style={{fontSize: 22, fontWeight: 'bold', color: '#050b36'}}>

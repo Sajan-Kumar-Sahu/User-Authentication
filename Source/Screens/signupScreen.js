@@ -1,4 +1,4 @@
-import {Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Alert, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import styles from '../style';
 import auth from '@react-native-firebase/auth'
@@ -17,6 +17,9 @@ const SignupScreen = () => {
         const isUserCreated = await auth().createUserWithEmailAndPassword(email,password)
         setEmail('');
         setPassword('');
+        await auth().currentUser.sendEmailVerification();
+        await  auth().signOut();
+        alert('A link has been sent to your email address. Kindly verify your email by clicking the link.')
         navigation.navigate('Login')
       }else {
         Alert.alert('Invalid Input','Enter required Details.');

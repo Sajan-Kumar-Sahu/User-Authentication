@@ -21,9 +21,15 @@ const LoginScreen = () => {
         setEmail('');
         setPassword('');
         setErrorMessage('');
-        navigation.dispatch(StackActions.replace('Home'))
+        if(isLogin.user.emailVerified){
+          navigation.dispatch(StackActions.replace('Home'));
+        }else{
+          Alert.alert('Verification Required','Kindly verify your email. If link not received click RESEND to get the link')
+          await auth().currentUser.sendEmailVerification()
+          await auth().signOut();
+        }
       } else {
-        Alert.alert('Invalid Input','Enter required Details.');
+        Alert.alert('Invalid Input', 'Enter required Details.');
       }
     } catch (error) {
       console.error(error);
