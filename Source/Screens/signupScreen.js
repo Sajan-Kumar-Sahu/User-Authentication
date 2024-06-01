@@ -1,10 +1,13 @@
 import {Alert, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import styles from '../style';
-import auth from '@react-native-firebase/auth'
-import { useNavigation } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import {useNavigation} from '@react-navigation/native';
 
 const SignupScreen = () => {
+  const [name, setName] = useState('');
+  const [uid, setUid] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -13,20 +16,37 @@ const SignupScreen = () => {
 
   const handleSignup = async (email, password) => {
     try {
-      if(email && password){
-        const isUserCreated = await auth().createUserWithEmailAndPassword(email,password)
+      if (email && password && name && uid) {
+        const response = await auth().createUserWithEmailAndPassword(
+          email,
+          password,
+        );
+        const userData = {
+          id: response.user.uid,
+          name: name,
+          email: email,
+          UID: uid,
+        };
+        await firestore()
+          .collection('students')
+          .doc(response.user.uid)
+          .set(userData);
+        setName('');
+        setUid('');
         setEmail('');
         setPassword('');
         await auth().currentUser.sendEmailVerification();
-        await  auth().signOut();
-        alert('A link has been sent to your email address. Kindly verify your email by clicking the link.')
-        navigation.navigate('Login')
-      }else {
-        Alert.alert('Invalid Input','Enter required Details.');
+        await auth().signOut();
+        alert(
+          'A link has been sent to your email address. Kindly verify your email by clicking the link.',
+        );
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('Invalid Input', 'Enter required Details.');
       }
     } catch (error) {
       console.error(error);
-      setErrorMessage(error.message)
+      setErrorMessage(error.message);
     }
   };
   return (
@@ -44,6 +64,16 @@ const SignupScreen = () => {
       </Text>
       <TextInput
         style={styles.textField}
+        placeholder="Name"
+        value={name}
+        onChangeText={text => setName(text)}></TextInput>
+      <TextInput
+        style={styles.textField}
+        placeholder="UID"
+        value={uid}
+        onChangeText={text => setUid(text)}></TextInput>
+      <TextInput
+        style={styles.textField}
         placeholder="Email ID"
         value={email}
         onChangeText={text => setEmail(text)}></TextInput>
@@ -51,9 +81,9 @@ const SignupScreen = () => {
         style={styles.textField}
         placeholder="Password"
         value={password}
-        onChangeText={text => setPassword(text)} 
+        onChangeText={text => setPassword(text)}
         secureTextEntry={true}></TextInput>
-        <Text style={{color:'yellow',fontSize:15}}>{errorMessage}</Text>
+      <Text style={{color: 'yellow', fontSize: 15}}>{errorMessage}</Text>
       <TouchableOpacity
         style={styles.loginBtn}
         onPress={() => handleSignup(email, password)}>
@@ -61,16 +91,19 @@ const SignupScreen = () => {
           Sign Up
         </Text>
       </TouchableOpacity>
-      <View style={{flexDirection:'row',justifyContent:'center',marginTop:10}}>
-      <Text style={{color:'#dad7cd',fontSize:18}}>Already have an account?  </Text>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Login')
-        }}>
-        <Text style={{fontSize: 18, fontWeight: 'bold', color: 'white'}}>
-        Login
+      <View
+        style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10}}>
+        <Text style={{color: '#dad7cd', fontSize: 18}}>
+          Already have an account?{' '}
         </Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Login');
+          }}>
+          <Text style={{fontSize: 18, fontWeight: 'bold', color: 'white'}}>
+            Login
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

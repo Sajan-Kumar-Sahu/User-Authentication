@@ -7,6 +7,7 @@ import SignupScreen from './Screens/signupScreen';
 import LoginScreen from './Screens/LoginScreen';
 import Home from './Screens/Home';
 import SplashScreen from './Screens/splashScreen';
+import MobileVerificationScreen from './Screens/MobileVerificationScreen';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,11 @@ export default function MainNavigator() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="MobileVerification"
+          component={MobileVerificationScreen}
+          options={{headerShown: false}}
+        />
+        {/* <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
           options={{headerShown: false}}
@@ -24,7 +30,6 @@ export default function MainNavigator() {
           component={LoginScreen}
           options={{headerShown: false}}
         />
-
         <Stack.Screen
           name="SignUp"
           component={SignupScreen}
@@ -35,7 +40,7 @@ export default function MainNavigator() {
           name="Home"
           component={Home}
           options={{headerShown: false}}
-        />
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
