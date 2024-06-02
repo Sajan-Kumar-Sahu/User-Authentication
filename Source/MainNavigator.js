@@ -16,11 +16,6 @@ export default function MainNavigator() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="MobileVerification"
-          component={MobileVerificationScreen}
-          options={{headerShown: false}}
-        />
-        {/* <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
           options={{headerShown: false}}
@@ -40,7 +35,7 @@ export default function MainNavigator() {
           name="Home"
           component={Home}
           options={{headerShown: false}}
-        /> */}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
